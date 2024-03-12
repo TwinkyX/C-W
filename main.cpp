@@ -1,90 +1,89 @@
 #include <iostream>
-using namespace std;
-class Comp
-{
-public:
-    int data;
-    Comp* next;
-    Comp(int _data) :data(_data) {};
-};
-class Stack
-{
-public:
-    Comp* head;
-    Stack()
-    {
-        this->head = NULL;
-    }
-    void show_all()
-    {
-        Comp* temp_comp = head;
-        int i = 1;
-        cout << "All heads" << endl;
-        while (temp_comp)
-        {
-            cout << i << ": " << temp_comp->data << endl;
-            temp_comp = temp_comp->next;
-            i++;
-        }
-    }
-    void pop_num(int N) {
-        Comp* temp_comp = head;
-        Comp* prev = NULL;
-        while (temp_comp != NULL) 
-        {
-            if (temp_comp->data == N) {
-                if (temp_comp == head) {
-                    head = temp_comp->next;
 
-                    temp_comp->data = NULL;
-                    temp_comp->next = NULL;
-                }
-                else
-                {
-                    prev->next = temp_comp->next;
-                    temp_comp->data = NULL;
-                    temp_comp->next = NULL;
-                }
-            }
-            prev = temp_comp; 
-            temp_comp = temp_comp->next;
-        }
-    }
-    void push(int data)
-    {
-        Comp* temp_comp = new Comp(data);
-        if (head != NULL)
-        {
-            temp_comp->next = head;
-            head = temp_comp;
-        }
-        else head = temp_comp;
-    }
-    void show_last()
-    {
-        cout << "Last element: " << head->data << endl;
-    }
-    void pop_last()
-    {
-        if (head == NULL) return;
-        Comp* temp_comp = head;
-        head = temp_comp->next;
-        delete temp_comp;
-    }
+// Структура узла стека
+struct Node {
+    int data;
+    Node* next;
 };
-int main()
-{
-    setlocale(0, "ru");
-    Stack st;
-    st.push(1);
-    st.push(2);
-    st.push(3);
-    st.push(4);
-    st.push(2);
-    st.show_last();
-    st.pop_last();
-    st.show_last();
-    st.show_all();
-    st.pop_num(3);
-    st.show_all();
+
+// Структура стека
+struct Stack {
+    Node* top;
+};
+
+// Инициализация стека
+void init(Stack &s) {
+    s.top = nullptr;
+}
+
+// Проверка на пустоту стека
+bool isEmpty(Stack &s) {
+    return s.top == nullptr;
+}
+
+// Добавление элемента в стек
+void push(Stack &s, int newItem) {
+    Node* newNode = new Node;
+    newNode->data = newItem;
+    newNode->next = s.top;
+    s.top = newNode;
+    std::cout << "Элемент " << newItem << " добавлен в стек." << std::endl;
+}
+
+// Удаление элемента из стека
+void pop(Stack &s) {
+    if (isEmpty(s)) {
+        std::cout << "Стек пуст, невозможно удалить элемент." << std::endl;
+    } else {
+        Node* temp = s.top;
+        s.top = s.top->next;
+        delete temp;
+    }
+}
+
+// Получение верхнего элемента стека
+int top(Stack &s) {
+    if (isEmpty(s)) {
+        std::cout << "Стек пуст." << std::endl;
+        return -1;
+    } else {
+        return s.top->data;
+    }
+}
+
+// Получение всех элементов стека
+void getAllElements(Stack &s) {
+    if (isEmpty(s)) {
+        std::cout << "Стек пуст." << std::endl;
+    } else {
+        std::cout << "Элементы стека: ";
+        Node* current = s.top;
+        while (current != nullptr) {
+            std::cout << current->data << " ";
+            current = current->next;
+        }
+        std::cout << std::endl;
+    }
+}
+
+// Пример использования
+int main() {
+    setlocale (0,"ru")
+    Stack stack;
+    init(stack);
+
+    push(stack, 1);
+    push(stack, 2);
+    push(stack, 3);
+
+    getAllElements(stack);
+
+    std::cout << "Верхний элемент стека: " << top(stack) << std::endl;
+
+    pop(stack);
+    pop(stack);
+
+    getAllElements(stack);
+
+    return 0;
 }
